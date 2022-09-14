@@ -4,7 +4,7 @@ const jwt = require ('jsonwebtoken')
 
 // schemas for routes
 const restaurantModel = require('../models/restaurant-model')
-const userModel = require('../models/user-model')
+const userModel = require('../models/user-model');
 
 // for routing the components
 const router = express.Router();
@@ -29,7 +29,7 @@ router.post('/signup',(req,res)=>{
                     restaurantModel.create(restaurant)
                     .then((data)=>{
 
-                        res.status(200).send({success:true,message:"restaurant resgistered successfully"})
+                        res.status(200).send({success:true,message:"restaurant resgistered successfully",data})
                     })
                     .catch((err)=>{
 
@@ -49,3 +49,48 @@ router.post('/signup',(req,res)=>{
         }
     })
 })
+
+router.post("/login",(req,res)=>{
+
+    let userCred = req.body;
+
+    restaurantModel.findOne({$or:[{email:userCred.email_user},{username:userCred.email_user}]})
+    .then((user)=>{
+
+        if(user!==null)
+        {
+            bcryptjs.compare(userCred.password,user.password,(err,result)=>{
+                if(err===null || err===undefined)
+                {
+                    if(result===true)
+                    {
+                        jwt.sign(userCred,"secretkey",{expiresIn:"1d"},(err,token)=>{
+ 
+                            if(err===null || err===undefined)
+                            {
+                                res.status(200).send({success:true,token:token,usermail:user.email,userid:user._id,username:user.username,profile_pic:user.profile_pic})
+                            }
+                        })
+                    }
+                    else
+                    {
+                        res.status(403).send({message:"Incorrect password",success:false})
+                    }
+                }
+
+            })
+        }
+        else
+        {
+            res.status(404).send({message:"User not found"})
+        }
+
+    })
+    .catch((err)=>{
+        // console.log(err);
+        res.status(503).send({success:false,message:"Someproblem while login in user"})
+    })
+
+})
+
+module.exports=router;

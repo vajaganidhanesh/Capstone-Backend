@@ -25,7 +25,12 @@ const itemSchema = mongoose.Schema({
         type:String,
         default:"IMAGE",
         required:true
+    },
+    restaurant:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"restaurantDetails"
     }
+
 },{timestamps:true});
 
 const itemModel = mongoose.model('items',itemSchema);

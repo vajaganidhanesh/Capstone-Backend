@@ -23,7 +23,7 @@ const restaurantSchema = mongoose.Schema({
         required:true
     },
     opening_time:{
-        type:Number,
+        type:String,
         reuired:true
     },
     closing_time:{
