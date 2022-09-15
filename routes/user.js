@@ -1,49 +1,39 @@
 const express = require('express');
 const bcryptjs = require('bcryptjs');
-const jwt = require ('jsonwebtoken')
+const jwt = require ('jsonwebtoken');
 
-// schemas for routes
-const restaurantModel = require('../models/restaurant-model')
+const userModel = require('../models/user-model')
 
-// for routing the components
+//for routing setup
 const router = express.Router();
 
-// endpoint for restaurants to get registeration into website
-
-router.post('/signup',(req,res)=>{
-    let restaurant = req.body;
+// endpoint to users for registeration 
+router.post("/signup",(req,res)=>{
+    let user = req.body;
 
     bcryptjs.genSalt(10,(err,salt)=>{
 
-        if(err===null || err === undefined)
+        if(err===null || err ===undefined)
         {
-
-            bcryptjs.hash(restaurant.password,salt,(err,encPass)=>{
-
-                if(err===null || err === undefined)
+            bcryptjs.hash(user.password,salt,(err,encPass)=>{
+                if(err===null || err ===undefined)
                 {
+                    user.password=encPass;
 
-                    restaurant.password = encPass;
-
-                    restaurantModel.create(restaurant)
+                    userModel.create(user)
                     .then((data)=>{
-
-                        res.status(200).send({success:true,message:"restaurant resgistered successfully",data})
+                        res.status(200).send({success:true,message:"user registered successfully"})
                     })
                     .catch((err)=>{
-
                         if(err.code===11000){
-                            res.status(409).send({success:false,message:"restaurant or Username already exits"})
+                            res.status(409).send({success:false,message:"user or Username already exits"})
                         }
                         else
                         {
                             res.status(400).send({success:false,message:err.errors.name.properties.message})
                         }
                     })
-
                 }
-
-
             })
         }
     })
@@ -51,23 +41,23 @@ router.post('/signup',(req,res)=>{
 
 router.post("/login",(req,res)=>{
 
-    let restaurantCred = req.body;
+    let userCred = req.body;
 
-    restaurantModel.findOne({$or:[{email:restaurantCred.email_user},{username:restaurantCred.email_user}]})
+    userModel.findOne({$or:[{email:userCred.email},{name:userCred.name}]})
     .then((user)=>{
 
         if(user!==null)
         {
-            bcryptjs.compare(restaurantCred.password,user.password,(err,result)=>{
+            bcryptjs.compare(userCred.password,user.password,(err,result)=>{
                 if(err===null || err===undefined)
                 {
                     if(result===true)
                     {
-                        jwt.sign(restaurantCred,"secretkey",{expiresIn:"1d"},(err,token)=>{
+                        jwt.sign(userCred,"secretkey",{expiresIn:"1d"},(err,token)=>{
  
                             if(err===null || err===undefined)
                             {
-                                res.status(200).send({success:true,token:token,usermail:user.email,userid:user._id,username:user.name,profile_pic:user.profile_pic,useraddress:user.address,timingam:user.opening_time,timingpm:user.closing_time})
+                                res.status(200).send({success:true,token:token,usermail:user.email,userid:user._id,username:user.name,profile_pic:user.profile_pic})
                             }
                         })
                     }

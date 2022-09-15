@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 // customized components routing components
-
 const restaurantRoutor = require('./routes/restaurant');
+const userRouter = require('./routes/user')
 
 
 // creating connection between mongodb and api
@@ -22,6 +22,7 @@ app.use(cors())
 
 // routing setup
 app.use('/restaurant',restaurantRoutor)
+app.use('/user',userRouter)
 
 app.listen(8000,()=>{
     console.log("server is running and up");
