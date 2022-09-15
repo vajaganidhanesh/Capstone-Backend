@@ -6,7 +6,7 @@ const itemSchema = mongoose.Schema({
         required:true
     },
 
-    quality:{
+    quantity:{
         type:Number,
         required:true
     },

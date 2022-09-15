@@ -2,10 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+
 // customized components routing components
 const restaurantRoutor = require('./routes/restaurant');
 const userRouter = require('./routes/user')
-
+const itemModel = require('./routes/items')
 
 // creating connection between mongodb and api
 mongoose.connect("mongodb://localhost:27017/capstone")
@@ -20,9 +21,13 @@ const app = express();
 app.use(express.json());
 app.use(cors())
 
+// accessing server side files for client side use...
+app.use('/pics',express.static('./foodposts'))
+
 // routing setup
-app.use('/restaurant',restaurantRoutor)
-app.use('/user',userRouter)
+app.use('/restaurant',restaurantRoutor);
+app.use('/user',userRouter);
+app.use('/items',itemModel)
 
 app.listen(8000,()=>{
     console.log("server is running and up");

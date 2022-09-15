@@ -42,6 +42,7 @@ router.post("/signup",(req,res)=>{
 router.post("/login",(req,res)=>{
 
     let userCred = req.body;
+    console.log(userCred);
 
     userModel.findOne({$or:[{email:userCred.email},{name:userCred.name}]})
     .then((user)=>{
