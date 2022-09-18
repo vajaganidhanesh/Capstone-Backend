@@ -21,14 +21,14 @@ const itemSchema = mongoose.Schema({
         required:true
     },
 
-    picture:{
-        type:String,
-        default:"IMAGE",
-        required:true
-    },
+    picture:[String],
     restaurant:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"restaurantDetails"
+    },
+    fileType:{
+        type:String,
+        default:"IMAGE"
     }
 
 },{timestamps:true});

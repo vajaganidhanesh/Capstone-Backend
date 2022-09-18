@@ -12,6 +12,10 @@ const orderSchema = mongoose.Schema({
     itemsCount:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'cart'
+    },
+    restaurant:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'restaurantDetails'
     }
 
 

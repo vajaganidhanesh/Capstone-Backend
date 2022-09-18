@@ -53,7 +53,7 @@ router.post("/login",(req,res)=>{
 
     let restaurantCred = req.body;
 
-    restaurantModel.findOne({$or:[{email:restaurantCred.email_user},{username:restaurantCred.email_user}]})
+    restaurantModel.findOne({$or:[{email:restaurantCred.email},{name:restaurantCred.name}]})
     .then((user)=>{
 
         if(user!==null)
