@@ -8,7 +8,8 @@ const { default: mongoose } = require('mongoose');
 
 // database schema or models
 const itemsModel = require('../models/item-model');
-const adminDetails = require('../models/restaurant-model')
+// const adminDetails = require('../models/restaurant-model');
+const cartModel = require('../models/cart-model');
 
 //for routing setup
 const router = express.Router();
@@ -141,7 +142,7 @@ router.put('/update/:id',verifytoken,(req,res)=>{
 })
 
 
-router.delete('/deleteitem/:id',(req,res)=>{
+router.delete('/deleteitem/:id',verifytoken,(req,res)=>{
     let id = req.params.id;
     itemsModel.deleteOne({_id:id})
     .then((info)=>{
@@ -151,6 +152,105 @@ router.delete('/deleteitem/:id',(req,res)=>{
         console.log(err);
         res.send({message:"Some issue while deleting the post"})
     })
+})
+
+
+router.get("/allitems",verifytoken,(req,res)=>{
+    
+    itemsModel.find().populate('restaurant')
+    .then((items)=>{
+        res.send({success:true,items});
+    })
+    .catch((err)=>{
+        res.send({message:"some problem..."})
+    })
+
+})
+
+router.post('/addtocart/:id',(req,res)=>{
+
+    let id = req.params.id;
+    let data = req.body
+    console.log(data);
+
+    cartModel.findOne({user:id})
+    .exec((err,cart)=>{
+
+        if(err){
+            res.send({message:"already in cart"})
+        }
+
+        if(cart)
+        {
+            // if cart is already exists update the product inside that object
+          
+            const item = req.body.cartItems.item;
+            const product = cart.cartItems.find(c=> c.item == item)
+            console.log(item);
+    
+            if(product)
+            {
+                console.log(product);
+                cartModel.findOneAndUpdate({"user":id,"cartItems.item":item},{
+
+                    "$set":{
+                        "cartItems.$":{
+                            ...req.body.cartItems,
+                            quantity : product.quantity + req.body.cartItems.quantity,
+                            price: req.body.cartItems.price + product.quantity * req.body.cartItems.price
+                        }
+                    }
+                })
+                .exec((err,cart)=>{
+                    if(err){
+                        res.send({message:"already in cart"})
+                    }
+                    if(cart){
+                        res.send({message:"quantity updated",cart})
+                    }
+                })
+            }
+
+            // if cart is already exists then new product will be added inside the cart object
+
+            else
+            {
+                cartModel.findOneAndUpdate({user:id},{
+                    "$push":{
+                        "cartItems":req.body.cartItems
+                         
+                    }
+                })
+                .exec((err,cart)=>{
+                    if(err){
+                        res.send({message:"already in cart"})
+                    }
+                    if(cart){
+                        res.send({message:"another one in cart",cart})
+                    }
+                })
+            }
+        }
+        else{
+
+            // if user is new to cart then new cart object will be added
+
+            const cart = new cartModel({
+
+                user:id,
+                cartItems:[req.body.cartItems]
+            });
+        
+            cart.save((err,cart) =>{
+        
+                if(err) return res.send({message:"item not updated"})
+        
+                if(cart) return res.send({message:"successfull",cart})
+            })
+        }
+    })
+
+   
 })
 
 
