@@ -20,7 +20,10 @@ const itemSchema = mongoose.Schema({
         type:String,
         required:true
     },
-
+    stock:{
+        type:Number,
+        required:true
+    },
     picture:[String],
     restaurant:{
         type:mongoose.Schema.Types.ObjectId,
