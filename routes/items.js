@@ -68,25 +68,6 @@ router.post('/create',verifytoken,(req,res)=>{
 
 router.get('/getitems/:adminid',verifytoken,async(req,res)=>{
     let id = req.params.adminid;
-    // let admin = await adminDetails.find({_id:id});
-
-    // let admins =await adminDetails.aggregate([
-    //     {
-    //         $lookup:{
-    //             from:'restaurantDetails',
-    //             localField:'restaurant',
-    //             foreignField:'_id',
-    //             as:"adminDetails"
-    //         }
-    //     },
-    //     {
-    //         $unwind:"$adminDetails"
-    //     },
-    //     {
-    //         $match:{'items.restaurant':mongoose.Types.ObjectId(id)}
-    //     }
-    // ])
-    // let comment = await itemsModel.findById(id._id).populate('restaurant')
 
     itemsModel.find({restaurant:id}).populate('restaurant')
     .then((items)=>{
@@ -98,7 +79,7 @@ router.get('/getitems/:adminid',verifytoken,async(req,res)=>{
     })
 })
 
-// to update restaurant      items 
+// to update restaurant items 
 
 router.put('/update/:id',verifytoken,(req,res)=>{
 
@@ -183,14 +164,14 @@ router.post('/addtocart/:id',(req,res)=>{
         if(cart)
         {
             // if cart is already exists update the product inside that object
-          
+
             const item = req.body.cartItems.item;
             const product = cart.cartItems.find(c=> c.item == item)
-            console.log(item);
+            // console.log(item);
     
             if(product)
             {
-                console.log(product);
+                // console.log(product);
                 cartModel.findOneAndUpdate({"user":id,"cartItems.item":item},{
 
                     "$set":{
@@ -251,6 +232,70 @@ router.post('/addtocart/:id',(req,res)=>{
     })
 
    
+})
+
+router.get("/allcartitems/:id",verifytoken,async(req,res)=>{
+
+    let id = req.params.id;
+
+    let items = await cartModel.aggregate([
+
+        {
+          
+            "$match":{user:mongoose.Types.ObjectId(id)}
+        },
+        {
+            "$unwind":"$cartItems"
+
+        },
+        {
+            "$lookup":{
+                from:"items",
+                localField:"cartItems.item",
+                foreignField:"_id",
+                as:"itemdetails"
+            }
+        },
+        {
+            "$unwind":"$itemdetails"
+        },
+        {
+            "$lookup":{
+                from:"restaurantdetails",
+                localField:"cartItems.restaurant",
+                foreignField:"_id",
+                as:"restaurant"
+            }
+        },
+        {
+            "$unwind":"$restaurant"
+        },
+        {
+            "$lookup":{
+              from:"users",
+              localField:"user",
+              foreignField:"_id",
+              as:"user"
+            }
+        },
+        {
+            "$unwind":"$user"
+        }
+    ])
+
+   
+    .exec((err,data)=>{
+
+        if(err)
+        {
+            res.send({message:"no data found"})
+        }
+
+        if(data){
+            res.send({success:true,data,items})
+
+        }
+    })
 })
 
 
