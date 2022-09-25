@@ -11,7 +11,7 @@ const cartSchema = mongoose.Schema({
         {
             item:{ 
                 type:mongoose.Schema.Types.ObjectId,
-                ref:"restaurantDetails",
+                ref:"items",
                 required:true
             },
             quantity:{
@@ -21,7 +21,12 @@ const cartSchema = mongoose.Schema({
             price:{
                 type:Number,
                 required:true
-            }
+            },
+            restaurant:{ 
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"restaurantDetails",
+                required:true
+            },
         }
     ]
     
