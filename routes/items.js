@@ -151,8 +151,6 @@ router.get("/allitems",verifytoken,(req,res)=>{
 router.post('/addtocart/:id',(req,res)=>{
 
     let id = req.params.id;
-    let data = req.body
-    console.log(data);
 
     cartModel.findOne({user:id})
     .exec((err,cart)=>{
@@ -234,6 +232,8 @@ router.post('/addtocart/:id',(req,res)=>{
    
 })
 
+// end point to all items inside a cart for particular user
+
 router.get("/allcartitems/:id",verifytoken,async(req,res)=>{
 
     let id = req.params.id;
@@ -296,6 +296,38 @@ router.get("/allcartitems/:id",verifytoken,async(req,res)=>{
 
         }
     })
+})
+
+
+// end point to remove particular item inside a cart for particular user
+
+router.delete("/cart/deleteitem/:id/:item",verifytoken,(req,res)=>{
+
+    let userId = req.params.id;
+    let itemId = req.params.item;
+
+    cartModel.findOneAndUpdate({user:userId},{
+        "$pull":{
+            "cartItems":{
+                "item":itemId
+            }
+             
+        }
+    })
+
+    .exec((err,data)=>{
+        if(err)
+        {
+            res.send({success:false,message:"no data found"})
+        }
+
+        if(data){
+            res.send({success:true,data,message:"successfully removed"})
+
+        }
+
+    })
+
 })
 
 
