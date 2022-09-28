@@ -4,19 +4,31 @@ const orderSchema = mongoose.Schema({
 
     user:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"users"
+        ref:"users",
+        required:true
     },
-    address:{
-        type:String
-    },
-    itemsCount:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'cart'
-    },
-    restaurant:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'restaurantDetails'
-    }
+    orderItems:[
+        {
+            item:{ 
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"items",
+                required:true
+            },
+            quantity:{
+                type:Number,
+                default:1
+            },
+            price:{
+                type:Number,
+                required:true
+            },
+            restaurant:{ 
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"restaurantDetails",
+                required:true
+            },
+        }
+    ]
 
 
 },{timestamps:true})

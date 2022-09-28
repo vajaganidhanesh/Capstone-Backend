@@ -169,9 +169,8 @@ router.post('/addtocart/:id',(req,res)=>{
     
             if(product)
             {
-                // console.log(product);
                 cartModel.findOneAndUpdate({"user":id,"cartItems.item":item},{
-
+                    
                     "$set":{
                         "cartItems.$":{
                             ...req.body.cartItems,
@@ -328,6 +327,51 @@ router.delete("/cart/deleteitem/:id/:item",verifytoken,(req,res)=>{
 
     })
 
+})
+
+router.post('/decreasequantity/:id',(req,res)=>{
+
+    let id = req.params.id;
+    cartModel.findOne({user:id})
+    .exec((err,cart)=>{
+
+        if(err){
+            res.send({message:"already in cart"})
+        }
+
+        if(cart)
+        {
+            // finding the correct product inside particular userCart
+
+            const item = req.body.cartItems.item;
+            const product = cart.cartItems.find(c=> c.item == item)
+            
+    
+            if(product)
+            {
+                cartModel.findOneAndUpdate({"user":id,"cartItems.item":item},{
+                    
+                    "$set":{
+                        "cartItems.$":{
+                            ...req.body.cartItems,
+                            quantity : product.quantity - req.body.cartItems.quantity,
+                            price: req.body.cartItems.price * product.quantity - req.body.cartItems.price
+                        }
+                    }
+                })
+                .exec((err,cart)=>{
+                    if(err){
+                        res.send({message:"already in cart"})
+                    }
+                    if(cart){
+                        res.send({message:"quantity decreased",cart})
+                    }
+                })
+            }
+       
+        }
+        
+    })
 })
 
 

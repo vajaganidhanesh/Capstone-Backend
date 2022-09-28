@@ -92,4 +92,19 @@ router.post("/login",(req,res)=>{
 
 })
 
+router.get("/allrestaurant",(req,res)=>{
+    restaurantModel.find()
+    .exec((err,data)=>{
+        if(err)
+        {
+          res.send({message:"unable to get"})
+        }
+
+        if(data)
+        {
+            res.send({success:true,data})
+        }
+    })
+})
+
 module.exports=router;
