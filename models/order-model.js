@@ -7,31 +7,22 @@ const orderSchema = mongoose.Schema({
         ref:"users",
         required:true
     },
-    orderItems:[
-        {
-            item:{ 
-                type:mongoose.Schema.Types.ObjectId,
-                ref:"items",
-                required:true
-            },
-            quantity:{
-                type:Number,
-                default:1
-            },
-            price:{
-                type:Number,
-                required:true
-            },
-            restaurant:{ 
-                type:mongoose.Schema.Types.ObjectId,
-                ref:"restaurantDetails",
-                required:true
-            },
-        }
-    ]
+    item:{ 
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"items",
+        required:true
+    },
+    quantity:{
+        type:Number,
+        required:true
+    },
+    price:{
+        type:Number,
+        required:true
+    }
 
 
 },{timestamps:true})
 
-const orderModel = mongoose.model('order',orderSchema)
+const orderModel = mongoose.model('orders',orderSchema)
 module.exports = orderModel;

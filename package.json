@@ -4,7 +4,8 @@
   "description": "restaurants can add their shop details and make it as complete online for customers by adding all details regarding food and shop details",
   "main": "index.js",
   "scripts": {
-    "test": "npm start"
+    "test": "npm start",
+    "start": "node index.js"
   },
   "keywords": [
     "backend",
@@ -21,6 +22,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.1",
     "formidable": "^2.0.1",
     "jsonwebtoken": "^8.5.1",

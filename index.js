@@ -2,11 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-
 // customized components routing components
 const restaurantRoutor = require('./routes/restaurant');
 const userRouter = require('./routes/user')
 const itemModel = require('./routes/items')
+
+require('dotenv').config();
 
 // creating connection between mongodb and api
 mongoose.connect("mongodb://localhost:27017/capstone")
@@ -29,6 +30,6 @@ app.use('/restaurant',restaurantRoutor);
 app.use('/user',userRouter);
 app.use('/items',itemModel)
 
-app.listen(8000,()=>{
+app.listen(process.env.PORT || 8000,()=>{
     console.log("server is running and up");
 })

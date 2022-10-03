@@ -12,6 +12,7 @@ const router = express.Router();
 
 router.post('/signup',(req,res)=>{
     let restaurant = req.body;
+   
 
     bcryptjs.genSalt(10,(err,salt)=>{
 

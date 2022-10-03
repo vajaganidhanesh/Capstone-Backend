@@ -8,8 +8,8 @@ const { default: mongoose } = require('mongoose');
 
 // database schema or models
 const itemsModel = require('../models/item-model');
-// const adminDetails = require('../models/restaurant-model');
 const cartModel = require('../models/cart-model');
+const orderModel = require('../models/order-model')
 
 //for routing setup
 const router = express.Router();
@@ -329,6 +329,7 @@ router.delete("/cart/deleteitem/:id/:item",verifytoken,(req,res)=>{
 
 })
 
+// end point to decrement the protect quantity
 router.post('/decreasequantity/:id',(req,res)=>{
 
     let id = req.params.id;
@@ -374,5 +375,57 @@ router.post('/decreasequantity/:id',(req,res)=>{
     })
 })
 
+// end point to create order for particular user
+
+router.post('/orderdetails',(req,res)=>{
+
+    let body = req.body
+
+    orderModel.insertMany(body)
+    .then((data)=>{
+        res.send({message:"inserted data",data,success:true})
+    })
+    .catch((err)=>{
+        res.send({message:"unable to upload"})
+    })
+    
+})
+
+// end point to fetch order details for particular user
+
+router.get('/allOrdersDetails/:id',async(req,res)=>{
+
+    let id = req.params.id;
+
+    await orderModel.aggregate([
+        {
+          
+            "$match":{user:mongoose.Types.ObjectId(id)}
+        },
+        {
+            "$lookup":{
+                from:"items",
+                localField:"item",
+                foreignField:"_id",
+                as:"itemsdetails"
+            }
+        },
+        {
+            "$unwind":"$itemsdetails"
+        }
+    ])
+    .exec((err,data)=>{
+        if(err) { res.send(err)}
+        if(data)
+        {
+            res.send({success:true,message:"fetched data successfully",data})
+        }
+    })
+    
+    
+})
 
 module.exports=router
+
+
+ 
