@@ -9,11 +9,9 @@ const restaurantModel = require('../models/restaurant-model')
 const router = express.Router();
 
 // endpoint for restaurants to get registeration into website
-
 router.post('/signup',(req,res)=>{
+    
     let restaurant = req.body;
-   
-
     bcryptjs.genSalt(10,(err,salt)=>{
 
         if(err===null || err === undefined)
