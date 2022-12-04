@@ -23,7 +23,7 @@ router.post('/signup',(req,res)=>{
                 {
 
                     restaurant.password = encPass;
-
+            // async await need
                     restaurantModel.create(restaurant)
                     .then((data)=>{
 
@@ -41,8 +41,6 @@ router.post('/signup',(req,res)=>{
                     })
 
                 }
-
-
             })
         }
     })
@@ -90,6 +88,8 @@ router.post("/login",(req,res)=>{
     })
 
 })
+
+// user body(restaurants) should be in limit and sorted manner
 
 router.get("/allrestaurant",(req,res)=>{
     restaurantModel.find()

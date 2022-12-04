@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 
+// moongose middle ware
+
 const userSchema = mongoose.Schema({
     name:{
         type:String,
-        required:[true,"Name is mandatory"]
+        required:[true,"Please provide details"],
+        unique:true
     },
     email:{
         type:String,
