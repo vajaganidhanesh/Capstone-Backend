@@ -1,39 +1,40 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const restaurantSchema = mongoose.Schema({
-    name:{
-        type:String,
-        required:true
+const restaurantSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
     },
-    email:{
-        type:String,
-        required:true,
-        unique:[true,"Email Already Exist"]
+    email: {
+      type: String,
+      required: true,
+      unique: [true, "Email Already Exist"],
     },
-    mobile:{
-        type:Number,
-        required:true
+    mobile: {
+      type: Number,
+      required: true,
     },
-    password:{
-        type:String,
-        required:true
+    password: {
+      type: String,
+      required: true,
     },
-    address:{
-        type:String,
-        required:true
+    address: {
+      type: String,
+      required: true,
     },
-    opening_time:{
-        type:String,
-        reuired:true
+    opening_time: {
+      type: String,
+      reuired: true,
     },
-    closing_time:{
-        type:String,
-        required:true
-    }
+    closing_time: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
-},{timestamps:true})
+const restaurantModel = mongoose.model("restaurantDetails", restaurantSchema);
 
-const restaurantModel = mongoose.model("restaurantDetails",restaurantSchema);
-
-module.exports=restaurantModel;
-
+module.exports = restaurantModel;

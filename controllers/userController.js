@@ -7,7 +7,6 @@ const userModel = require("../models/user-model");
 // @route /user/signup
 // @access Public
 const registerUser = AsyncHandler(async (req, res) => {
-  console.log(req.body);
   const { name, email, password, mobile } = req.body;
 
   if (!name || !email || !password || !mobile) {
@@ -80,4 +79,5 @@ const generateToken = (id) => {
 module.exports = {
   registerUser,
   loginUser,
+  generateToken,
 };
