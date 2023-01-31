@@ -38,6 +38,7 @@ const router = express.Router();
 //         }
 //     })
 // })
+
 router.post("/signup", registerUser);
 
 router.post("/login", (req, res) => {

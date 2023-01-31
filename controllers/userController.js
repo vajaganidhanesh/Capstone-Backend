@@ -7,10 +7,11 @@ const userModel = require("../models/user-model");
 // @route /user/signup
 // @access Public
 const registerUser = AsyncHandler(async (req, res) => {
+  console.log(req.body);
   const { name, email, password, mobile } = req.body;
+
   if (!name || !email || !password || !mobile) {
     res.status(400);
-    throw new Error("Please include all fields");
   }
 
   // find if user already exists
@@ -39,6 +40,9 @@ const registerUser = AsyncHandler(async (req, res) => {
       email: user.email,
       token: generateToken(user._id),
     });
+  } else {
+    res.status(401);
+    throw new Error("Invalid user data");
   }
 });
 
