@@ -10,7 +10,7 @@ const itemModel = require('./routes/items')
 require('dotenv').config();
 
 // creating connection between mongodb and api
-mongoose.connect("mongodb://localhost:27017/capstone")
+mongoose.connect(process.env.MONGO_URL)
 .then(()=>{
     console.log("connection successfull");
 })
