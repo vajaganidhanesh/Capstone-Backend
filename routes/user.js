@@ -1,8 +1,5 @@
 const express = require("express");
-const bcryptjs = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { registerUser } = require("../controllers/userController");
-const userModel = require("../models/user-model");
+const { registerUser, loginUser } = require("../controllers/userController");
 
 //for routing setup
 const router = express.Router();
@@ -39,53 +36,53 @@ const router = express.Router();
 //     })
 // })
 
-router.post("/signup", registerUser);
+router.post("/signup", registerUser).post("/login", loginUser);
 
-router.post("/login", (req, res) => {
-  let userCred = req.body;
-  console.log(userCred);
+// router.post("/login", (req, res) => {
+//   let userCred = req.body;
+//   console.log(userCred);
 
-  userModel
-    .findOne({ $or: [{ email: userCred.email }, { name: userCred.name }] })
-    .then((user) => {
-      if (user !== null) {
-        bcryptjs.compare(userCred.password, user.password, (err, result) => {
-          if (err === null || err === undefined) {
-            if (result === true) {
-              jwt.sign(
-                userCred,
-                "secretkey",
-                { expiresIn: "1d" },
-                (err, token) => {
-                  if (err === null || err === undefined) {
-                    res.status(200).send({
-                      success: true,
-                      token: token,
-                      usermail: user.email,
-                      userid: user._id,
-                      username: user.name,
-                      profile_pic: user.profile_pic,
-                    });
-                  }
-                }
-              );
-            } else {
-              res
-                .status(403)
-                .send({ message: "Incorrect password", success: false });
-            }
-          }
-        });
-      } else {
-        res.status(404).send({ message: "User not found" });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res
-        .status(503)
-        .send({ success: false, message: "Someproblem while login in user" });
-    });
-});
+//   userModel
+//     .findOne({ $or: [{ email: userCred.email }, { name: userCred.name }] })
+//     .then((user) => {
+//       if (user !== null) {
+//         bcryptjs.compare(userCred.password, user.password, (err, result) => {
+//           if (err === null || err === undefined) {
+//             if (result === true) {
+//               jwt.sign(
+//                 userCred,
+//                 "secretkey",
+//                 { expiresIn: "1d" },
+//                 (err, token) => {
+//                   if (err === null || err === undefined) {
+//                     res.status(200).send({
+//                       success: true,
+//                       token: token,
+//                       usermail: user.email,
+//                       userid: user._id,
+//                       username: user.name,
+//                       profile_pic: user.profile_pic,
+//                     });
+//                   }
+//                 }
+//               );
+//             } else {
+//               res
+//                 .status(403)
+//                 .send({ message: "Incorrect password", success: false });
+//             }
+//           }
+//         });
+//       } else {
+//         res.status(404).send({ message: "User not found" });
+//       }
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res
+//         .status(503)
+//         .send({ success: false, message: "Someproblem while login in user" });
+//     });
+// });
 
 module.exports = router;
