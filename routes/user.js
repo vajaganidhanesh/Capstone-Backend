@@ -38,7 +38,7 @@ const router = express.Router();
 //         }
 //     })
 // })
-router.post("/");
+router.post("/signup", registerUser);
 
 router.post("/login", (req, res) => {
   let userCred = req.body;
@@ -57,16 +57,14 @@ router.post("/login", (req, res) => {
                 { expiresIn: "1d" },
                 (err, token) => {
                   if (err === null || err === undefined) {
-                    res
-                      .status(200)
-                      .send({
-                        success: true,
-                        token: token,
-                        usermail: user.email,
-                        userid: user._id,
-                        username: user.name,
-                        profile_pic: user.profile_pic,
-                      });
+                    res.status(200).send({
+                      success: true,
+                      token: token,
+                      usermail: user.email,
+                      userid: user._id,
+                      username: user.name,
+                      profile_pic: user.profile_pic,
+                    });
                   }
                 }
               );
