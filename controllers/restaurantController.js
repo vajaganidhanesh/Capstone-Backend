@@ -1,21 +1,21 @@
 const AsyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const restaurantModel = require("../models/restaurant-model");
-const { generateToken } = require("./userController");
 
 // @desc register a new admin
-// @route /admin/signup
+// @route /restaurant/signup
 // @access Public
 const registerAdmin = AsyncHandler(async (req, res) => {
-  const { name, email, password, mobile, opentime, closetime, address } =
+  const { name, email, password, mobile, opening_time, closing_time, address } =
     req.body;
   if (
     !name ||
     !email ||
     !password ||
     !mobile ||
-    !opentime ||
-    !closetime ||
+    !opening_time ||
+    !closing_time ||
     !address
   ) {
     res.status(400);
@@ -38,8 +38,8 @@ const registerAdmin = AsyncHandler(async (req, res) => {
     password: hashedPassword,
     mobile,
     address,
-    opening_time: opentime,
-    close_time: closetime,
+    opening_time,
+    closing_time,
   });
 
   if (admin) {
@@ -56,7 +56,7 @@ const registerAdmin = AsyncHandler(async (req, res) => {
 });
 
 // @desc login admin
-// @route /user/signup
+// @route /restaurant/signup
 // @access Public
 const loginAdmin = AsyncHandler(async (req, res) => {
   const { email, password, name } = req.body;
@@ -79,7 +79,29 @@ const loginAdmin = AsyncHandler(async (req, res) => {
   }
 });
 
+// @desc list of restaurants
+// @route /restaurant/allrestaurant
+// @access Public
+const restaurantList = AsyncHandler(async (req, res) => {
+  try {
+    const listRestaurant = await restaurantModel.find();
+    if (listRestaurant) {
+      res.status(201).json({ listRestaurant });
+    }
+  } catch (error) {
+    res.status(401).json(error);
+  }
+});
+
+// Generating new token
+const generateToken = (id) => {
+  return jwt.sign({ id }, "secret", {
+    expiresIn: "3d",
+  });
+};
+
 module.exports = {
   registerAdmin,
   loginAdmin,
+  restaurantList,
 };
