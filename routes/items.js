@@ -359,17 +359,24 @@ router.post("/decreasequantity/:id", (req, res) => {
 
 // end point to create order for particular user
 
-router.post("/orderdetails", (req, res) => {
+router.post("/orderdetails", async (req, res) => {
   let body = req.body;
 
-  orderModel
-    .insertMany(body)
-    .then((data) => {
-      res.send({ message: "inserted data", data, success: true });
-    })
-    .catch((err) => {
-      res.send({ message: "unable to upload" });
-    });
+  // orderModel
+  //   .insertMany(body)
+  //   .then((data) => {
+  //     res.send({ message: "inserted data", data, success: true });
+  //   })
+  //   .catch((err) => {
+  //     res.send({ message: "unable to upload" });
+  //   });
+
+  try {
+    let orderDetails = await orderModel.insertMany(body);
+    res.send({ message: "inserted data", success: true, orderDetails });
+  } catch (error) {
+    res.send({ message: "unable to upload" });
+  }
 });
 
 // end point to fetch order details for particular user

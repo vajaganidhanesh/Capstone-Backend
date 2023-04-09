@@ -4,6 +4,8 @@ const { registerUser, loginUser } = require("../controllers/userController");
 //for routing setup
 const router = express.Router();
 
+router.post("/signup", registerUser).post("/login", loginUser);
+
 // endpoint to users for registeration
 // router.post("/signup",(req,res)=>{
 //     let user = req.body;
@@ -35,8 +37,6 @@ const router = express.Router();
 //         }
 //     })
 // })
-
-router.post("/signup", registerUser).post("/login", loginUser);
 
 // router.post("/login", (req, res) => {
 //   let userCred = req.body;
