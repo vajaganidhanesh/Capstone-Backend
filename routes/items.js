@@ -13,7 +13,7 @@ const orderModel = require("../models/order-model");
 //for routing setup
 const router = express.Router();
 
-router.post("/create", verifytoken, (req, res) => {
+router.post("/create", verifytoken, async (req, res) => {
   const form = new formidable.IncomingForm();
   form.parse(req, (err, fields, files) => {
     if (!err) {
@@ -63,16 +63,25 @@ router.post("/create", verifytoken, (req, res) => {
 router.get("/getitems/:adminid", verifytoken, async (req, res) => {
   let id = req.params.adminid;
 
-  itemsModel
-    .find({ restaurant: id })
-    .populate("restaurant")
-    .then((items) => {
-      res.send({ success: true, items });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.send({ message: "some issue while fetching items" });
-    });
+  // itemsModel
+  //   .find({ restaurant: id })
+  //   .populate("restaurant")
+  //   .then((items) => {
+  //     res.send({ success: true, items });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //     res.send({ message: "some issue while fetching items" });
+  //   });
+
+  try {
+    let items = await itemsModel
+      .find({ restaurant: id })
+      .populate("restaurant");
+    console.log(items);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // to update restaurant items
