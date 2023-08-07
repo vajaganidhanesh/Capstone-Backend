@@ -1,29 +1,31 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // moongose middle ware
 
-const userSchema = mongoose.Schema({
-    name:{
-        type:String,
-        required:[true,"Please provide details"],
-        unique:true
+const userSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Please provide details"],
+      unique: true,
     },
-    email:{
-        type:String,
-        required:true,
-        unique:[true,"Email Already Exist"]
+    email: {
+      type: String,
+      required: true,
+      unique: [true, "Email Already Exist"],
     },
-    mobile:{
-        type:Number,
-        required:true
+    mobile: {
+      type: Number,
+      required: true,
     },
-    password:{
-        type:String,
-        required:true
-    }
-},{timestamps:true})
+    password: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
-
-const userModel = mongoose.model("users",userSchema);
+const userModel = mongoose.model("users", userSchema);
 
 module.exports = userModel;
